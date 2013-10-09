@@ -1,1 +1,1 @@
-<img src="http://64.22.124.178/cve.png"/><!-- You're vulnerable to CVE-2013-4378. Please upgrade to JavaMelody 1.47 ASAP -->
+<img src="http://64.22.124.178/cve-${DOMAIN}.png"/><!-- You're vulnerable to CVE-2013-4378. Please upgrade to JavaMelody 1.47 ASAP -->
